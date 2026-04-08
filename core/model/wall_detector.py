@@ -11,7 +11,7 @@ from core.postprocessing.extract_walls import (
 
 def find_walls(raw_edges: np.ndarray) -> list[tuple]:
     edges_closed = cv2.dilate(
-        raw_edges, cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
+        raw_edges, cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
     )
     edges_closed = cv2.erode(
         edges_closed, cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15))

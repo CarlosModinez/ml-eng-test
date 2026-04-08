@@ -1,28 +1,65 @@
-# Machine Learning Engineer Test: Computer Vision and Object Detection
+# Wall Detection API
 
-## Objective
-This test aims to assess your skills in computer vision and object detection, with a specific focus on detecting room walls and identifying rooms in architectural blueprints or pre-construction plans.
+Detects walls in architectural blueprint PDFs using classical computer vision techniques. Uploads a PDF floor plan and returns a PNG image with detected walls highlighted in red.
 
-This test evaluates your practical skills in applying advanced computer vision techniques to a specialized domain and your ability to integrate machine learning models into a simple API server for real-world applications.
+> **Note:** I'm aware that training segmentation or object detection models (e.g., using the CubiCasa dataset) would likely yield better results for this task. I saw other approaches going that route, but I wanted to try something different and explore how far classical computer vision techniques could go.
 
-Choose one of the visual tasks, one of the text extraction tasks, and the API Server task. We encourage you to submit your tests even if you can’t complete all tasks.
+## How It Works
 
-Good luck!
+The pipeline processes a PDF blueprint through these stages:
 
+1. **PDF to Image** — Converts the first page of the PDF to a high-resolution image (300 DPI).
+2. **Preprocessing** — Removes borders, resizes, and applies adaptive binarization.
+3. **Wall Extraction** — Uses morphological operations to isolate horizontal, vertical, and diagonal wall structures.
+4. **Edge Detection & Line Fitting** — Applies Canny edge detection followed by Hough Line Transform to detect wall segments.
+5. **Filtering** — Filters lines by length and angle to keep only valid wall candidates.
+6. **Output** — Draws detected walls (red lines) over the original image.
 
-## Full test description
-[Senior Machine Learning Engineer.pdf](https://github.com/user-attachments/files/16702909/Senior.Machine.Learning.Engineer.pdf)
+## Running with Docker
 
+### Prerequisites
 
-## PS
-Share your project with the following GitHub users:
-- vhaine-tb
-- gabrielreis-tb
+- [Docker](https://www.docker.com/get-started) installed and running
 
-## Example cURL
+### Start the API
+
+```bash
+docker compose up --build
 ```
-curl -X POST -F "image=@extracted_page_xyz.png" "http://localhost:3000/run-inference?type=wall"
-curl -X POST -F "image=@extracted_page_xyz.png" "http://localhost:3000/run-inference?type=room"
-curl -X POST -F "image=@extracted_page_xyz.png" "http://localhost:3000/run-inference?type=page_info"
-curl -X POST -F "image=@extracted_page_xyz.png" "http://localhost:3000/run-inference?type=tables"
+
+The API will be available at `http://localhost:8000`.
+
+### Endpoints
+
+
+| Method | Path            | Description                          |
+| ------ | --------------- | ------------------------------------ |
+| GET    | `/health`       | Health check                         |
+| POST   | `/detect-walls` | Upload a PDF and get wall detections |
+
+### Example Usage
+
+```bash
+curl -X POST -F "file=@your-floor-plan.pdf" http://localhost:8000/detect-walls --output result.png
 ```
+
+This sends a PDF floor plan and saves the output image with detected walls to `result.png`.
+
+### Stop the API
+
+```bash
+docker compose down
+```
+
+## Output
+
+<!-- Add your output image below -->
+
+![Wall Detection Output](output.png)
+
+## Tech Stack
+
+- **FastAPI** — Web framework
+- **OpenCV** — Image processing and computer vision
+- **pdf2image** — PDF to image conversion
+- **NumPy** — Numerical operations

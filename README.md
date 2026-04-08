@@ -2,7 +2,7 @@
 
 Detects walls in architectural blueprint PDFs using classical computer vision techniques. Uploads a PDF floor plan and returns a PNG image with detected walls highlighted in red.
 
-> **Note:** I'm aware that training segmentation or object detection models (e.g., using the CubiCasa dataset) would likely yield better results for this task. I saw other approaches going that route, but I wanted to try something different and explore how far classical computer vision techniques could go.
+> **Note:** I'm aware that training segmentation or object detection models (e.g., using the [CubiCasa dataset](https://www.kaggle.com/datasets/qmarva/cubicasa5k) would likely yield better results for this task. I saw other approaches going that route, but I wanted to try something different and explore how far classical computer vision techniques could go.
 
 ## How It Works
 
